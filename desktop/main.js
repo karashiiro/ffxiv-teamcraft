@@ -93,7 +93,7 @@ handleSquirrelEvent();
 const { app, ipcMain, BrowserWindow, Tray, nativeImage, protocol, Menu, autoUpdater, dialog, shell } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
-const Machina = require('./machina.js');
+const Zanarkand = require('./zanarkand.js');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
 ipcMain.setMaxListeners(0);
@@ -226,7 +226,7 @@ function createWindow() {
   win = new BrowserWindow(opts);
 
   if (config.get('machina') === true) {
-    Machina.start(win, config, options.verbose, options.winpcap, options.pid);
+    Zanarkand.start(win, config, options.verbose, options.winpcap, options.pid);
   }
 
   const proxyRule = config.get('proxy-rule', '');
@@ -291,7 +291,7 @@ function createWindow() {
       return false;
     }
     if (config.get('machina') === true) {
-      Machina.stop();
+      Zanarkand.stop();
     }
     config.set('overlays', openedOverlayUris);
     config.set('win:bounds', win.getBounds());
@@ -448,9 +448,9 @@ ipcMain.on('toggle-machina', (event, enabled) => {
   config.set('machina', enabled);
   event.sender.send('toggle-machina:value', enabled);
   if (enabled) {
-    Machina.start(win, config, options.verbose, options.winpcap);
+    Zanarkand.start(win, config, options.verbose, options.winpcap);
   } else {
-    Machina.stop();
+    Zanarkand.stop();
   }
 });
 
@@ -571,8 +571,8 @@ ipcMain.on('apply-settings', (event, settings) => {
       config.set('region', settings.region);
 
       if (config.get('machina') === true) {
-        Machina.stop();
-        Machina.start(win, config, options.verbose, options.winpcap);
+        Zanarkand.stop();
+        Zanarkand.start(win, config, options.verbose, options.winpcap);
       }
     }
 
